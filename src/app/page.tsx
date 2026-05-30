@@ -4,6 +4,7 @@ import HeroSection from "./section/HeroSection";
 import FeaturedSection from "./section/FeaturedSection";
 import AboutArtist from "./section/AboutArtsist";
 import CustomCreationSection from "./section/CustomOrderSection";
+import ReviewSection from "./section/ReviewSection";
 
 export default function Page() {
   return (
@@ -61,6 +62,9 @@ export default function Page() {
 
           {/* CUSSOM ORDER */}
           <CustomCreationSection />
+
+          {/* REVIEW SECTION   */}
+          <ReviewSection />
         </div>
       </div>
     </main>

@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import Navbar from "./components/Navbar";
 import "./globals.css";
 import { Playfair_Display, Caveat } from "next/font/google";
+import Footer from "./components/Footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -44,6 +45,7 @@ export default function RootLayout({
       >
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );

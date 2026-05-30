@@ -5,6 +5,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { Sparkles, Palette, Heart, Gift, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const steps = [
   {
@@ -54,10 +55,7 @@ export default function CustomCreationSection() {
   };
 
   return (
-    <section className="relative overflow-hidden py-24 text-white">
-      {/* GLOW */}
-      <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-yellow-500/10 blur-3xl" />
-
+    <section className="relative pt-24 text-white">
       <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8">
         {/* ================= HEADING ================= */}
 
@@ -81,7 +79,7 @@ export default function CustomCreationSection() {
 
         {/* ================= MOBILE STACK ================= */}
 
-        <div className="relative mx-auto flex h-[420px] max-w-[320px] items-center justify-center lg:hidden">
+        <div className="relative mx-auto flex h-[470px] max-w-[320px] items-center justify-center lg:hidden">
           <AnimatePresence>
             {cards.map((step, index) => {
               const Icon = step.icon;
@@ -105,9 +103,9 @@ export default function CustomCreationSection() {
                     y: 40,
                   }}
                   animate={{
-                    opacity: 1,
-                    scale: 1 - index * 0.05,
-                    y: index * 18,
+                    opacity: index > 2 ? 0 : 1,
+                    scale: 1,
+                    y: index * 16,
                     rotate: index % 2 === 0 ? -2 : 2,
                     zIndex: cards.length - index,
                   }}
@@ -122,7 +120,7 @@ export default function CustomCreationSection() {
                   className="absolute w-full cursor-grab active:cursor-grabbing"
                 >
                   {/* MOBILE CARD */}
-                  <div className="group relative overflow-hidden rounded-[34px] border border-white/10 bg-[#111111] p-7 shadow-[0_10px_40px_rgba(0,0,0,0.45)] transition duration-500">
+                  <div className="group relative overflow-hidden rounded-[34px] border border-[#2a2a2a] bg-[#111111] p-7 shadow-[0_15px_35px_rgba(0,0,0,0.45)] transition duration-500">
                     {/* TOP */}
                     <div className="flex items-start justify-between">
                       {/* NUMBER */}
@@ -131,7 +129,7 @@ export default function CustomCreationSection() {
                       </h3>
 
                       {/* ICON */}
-                      <div className="flex h-14 w-14 items-center justify-center rounded-full border border-yellow-500/20 bg-yellow-500/10">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#2d2d2d] bg-[#1a1a1a]">
                         <Icon className="h-6 w-6 text-yellow-400" />
                       </div>
                     </div>
@@ -187,7 +185,7 @@ export default function CustomCreationSection() {
                 whileHover={{
                   y: -6,
                 }}
-                className="group relative min-h-[360px] overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.03] p-8 shadow-[0_0_40px_rgba(255,255,255,0.02)] backdrop-blur-3xl transition duration-500 hover:border-yellow-500/20 hover:bg-yellow-500/[0.03]"
+                className="group relative min-h-[360px] overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.03] p-8 shadow-[0_10px_40px_rgba(0,0,0,0.25)] backdrop-blur-xl transition duration-500 hover:border-yellow-500/20 hover:bg-yellow-500/[0.03]"
               >
                 {/* GLOW */}
                 <div className="absolute inset-0 opacity-0 transition duration-700 group-hover:opacity-100">
@@ -225,6 +223,79 @@ export default function CustomCreationSection() {
             );
           })}
         </div>
+
+        {/* ================= CTA BUTTON ================= */}
+
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 30,
+          }}
+          whileInView={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 0.7,
+            delay: 0.2,
+          }}
+          viewport={{
+            once: true,
+          }}
+          className="mt-20 flex justify-center"
+        >
+          <motion.button
+            whileHover={{
+              scale: 1.03,
+            }}
+            whileTap={{
+              scale: 0.97,
+            }}
+            className="group relative overflow-hidden rounded-full border border-yellow-500/20 bg-yellow-500/[0.08] px-5 py-3 shadow-[0_0_40px_rgba(255,215,0,0.08)] backdrop-blur-xl transition duration-500 hover:border-yellow-500/40 hover:bg-yellow-500/[0.12] sm:px-8 sm:py-4"
+          >
+            {/* ANIMATED SHINE */}
+            <motion.div
+              animate={{
+                x: ["-120%", "120%"],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              className="absolute inset-y-0 w-24 bg-gradient-to-r from-transparent via-white/20 to-transparent blur-xl"
+            />
+
+            <Link href="/custom-order">
+              {/* GLOW */}
+              <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100">
+                <div className="absolute left-1/2 top-1/2 h-32 w-32 -translate-x-1/2 -translate-y-1/2 rounded-full bg-yellow-400/20 blur-3xl" />
+              </div>
+
+              {/* CONTENT */}
+              <div className="relative z-10 flex items-center gap-3 sm:gap-4">
+                {/* ICON */}
+                <div className="flex h-8 w-8 items-center justify-center rounded-full border border-yellow-500/20 bg-yellow-500/10 sm:h-10 sm:w-10">
+                  <Sparkles className="h-4 w-4 text-yellow-400 sm:h-5 sm:w-5" />
+                </div>
+
+                {/* TEXT */}
+                <div className="text-left leading-tight">
+                  <p className="text-[8px] uppercase tracking-[0.25em] text-yellow-400 sm:text-[10px] sm:tracking-[0.35em]">
+                    Begin Your Artwork
+                  </p>
+
+                  <h4 className="mt-1 font-serif text-sm text-white sm:text-lg">
+                    Request Custom Order
+                  </h4>
+                </div>
+
+                {/* ARROW */}
+                <ArrowRight className="h-4 w-4 text-yellow-400 transition duration-300 group-hover:translate-x-1 sm:h-5 sm:w-5" />
+              </div>
+            </Link>
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   );

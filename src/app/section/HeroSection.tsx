@@ -25,7 +25,7 @@ export default function HeroSection() {
               className="group relative h-[390px] w-[280px] overflow-hidden rounded-[34px] border border-white/10 bg-white/[0.03] shadow-[0_0_60px_rgba(255,215,0,0.08)] backdrop-blur-3xl sm:h-[500px] sm:w-[360px] md:h-[560px] md:w-[420px]"
             >
               <Image
-                src="/heroImage/pic3.jpeg"
+                src="/heroImage/pic3.png"
                 alt="Interior Flame Artwork"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -48,7 +48,7 @@ export default function HeroSection() {
               className="group absolute right-[-10px] top-[10px] overflow-hidden rounded-[24px] border border-white/10 bg-white/[0.03] shadow-2xl backdrop-blur-3xl sm:right-[-25px]"
             >
               <Image
-                src="/heroImage/pic1.jpeg"
+                src="/heroImage/pic1.png"
                 alt="Decor"
                 width={220}
                 height={220}
@@ -64,7 +64,7 @@ export default function HeroSection() {
               className="group absolute bottom-[-10px] right-[0px] overflow-hidden rounded-full border-[6px] border-black shadow-[0_0_40px_rgba(255,255,255,0.12)]"
             >
               <Image
-                src="/heroImage/pic2.jpeg"
+                src="/heroImage/pic2.png"
                 alt="Fashion"
                 width={240}
                 height={240}
