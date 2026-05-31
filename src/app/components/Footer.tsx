@@ -102,7 +102,8 @@ export default function Footer() {
             <div className="mt-8 flex items-center gap-3 sm:gap-4">
               {/* INSTAGRAM */}
               <Link
-                href="#"
+                target="_blank"
+                href="https://www.instagram.com/_interiorflame_by_dia_"
                 className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] transition duration-500 hover:border-yellow-500/20 hover:bg-yellow-500/[0.08] sm:h-12 sm:w-12"
               >
                 <svg
@@ -117,7 +118,8 @@ export default function Footer() {
 
               {/* FACEBOOK */}
               <Link
-                href="#"
+                target="_blank"
+                href="https://www.facebook.com/share/1BGD2CUBC4/?mibextid=wwXIfr"
                 className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] transition duration-500 hover:border-yellow-500/20 hover:bg-yellow-500/[0.08] sm:h-12 sm:w-12"
               >
                 <svg
@@ -132,7 +134,8 @@ export default function Footer() {
 
               {/* WHATSAPP */}
               <Link
-                href="#"
+                target="_blank"
+                href="https://wa.me/8801404601580"
                 className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] transition duration-500 hover:border-yellow-500/20 hover:bg-yellow-500/[0.08] sm:h-12 sm:w-12"
               >
                 <svg
@@ -147,7 +150,9 @@ export default function Footer() {
 
               {/* EMAIL */}
               <Link
-                href="#"
+                rel="noopener noreferrer"
+                target="_blank"
+                href="mailto:interiorflame046@gmail.com"
                 className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] transition duration-500 hover:border-yellow-500/20 hover:bg-yellow-500/[0.08] sm:h-12 sm:w-12"
               >
                 <Mail className="h-5 w-5 text-zinc-400 transition duration-500 group-hover:text-yellow-400" />
@@ -198,7 +203,7 @@ export default function Footer() {
                   </p>
 
                   <p className="mt-2 text-sm text-zinc-300">
-                    hello@interiorflame.com
+                    interiorflame046@gmail.com
                   </p>
                 </div>
               </div>
