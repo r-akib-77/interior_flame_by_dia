@@ -344,10 +344,11 @@ ${message}
                       id="category"
                       className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none transition duration-300 focus:border-yellow-500/30 sm:px-5 sm:py-4"
                     >
-                      <option>Luxury Tote Painting</option>
-                      <option>Canvas Artwork</option>
-                      <option>Custom Apparel</option>
-                      <option>Embroidery Hoop</option>
+                      <option>Exhibition</option>
+                      <option>Painting</option>
+                      <option>Wedding Customised Frames</option>
+                      <option>Accessories</option>
+                      <option>Texture & Collage Works</option>
                     </select>
                   </div>
 
