@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaFacebookMessenger, FaWhatsapp, FaFacebookF } from "react-icons/fa";
+import { FaWhatsapp, FaFacebookF } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { MessageCircle, X } from "lucide-react";
 
@@ -11,7 +11,7 @@ export default function FloatingChat() {
 
   const socials = [
     {
-      href: "https://m.me/YOUR_PAGE",
+      href: "https://www.instagram.com/_interiorflame_by_dia_?igsh=N3plMzd3anlmY3c2&utm_source=qr",
       icon: <FaInstagram size={24} />,
       color: "bg-gradient-to-br from-[#F58529] via-[#DD2A7B] to-[#8134AF]",
     },

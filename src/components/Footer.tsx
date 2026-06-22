@@ -58,28 +58,32 @@ export default function Footer() {
             {/* Socials */}
             <div className="mt-8 flex gap-4">
               <a
-                href="#"
+                target="_blank"
+                href="https://www.instagram.com/_interiorflame_by_dia_?igsh=N3plMzd3anlmY3c2&utm_source=qr"
                 className="flex h-12 w-12 items-center justify-center rounded-full border border-blue-100 bg-white text-blue-600 transition hover:-translate-y-1 hover:shadow-lg"
               >
                 <FaInstagram size={18} />
               </a>
 
               <a
-                href="#"
+                target="_blank"
+                href="https://www.facebook.com/people/Interior-Flame/100089198388109/?mibextid=wwXIfr&rdid=a3r2oZ9QV5rrwsPd&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BGD2CUBC4%2F%3Fmibextid%3DwwXIfr"
                 className="flex h-12 w-12 items-center justify-center rounded-full border border-blue-100 bg-white text-blue-600 transition hover:-translate-y-1 hover:shadow-lg"
               >
                 <FaFacebookF size={16} />
               </a>
 
               <a
-                href="#"
+                href="https://www.facebook.com/people/Interior-Flame/100089198388109/?mibextid=wwXIfr&rdid=a3r2oZ9QV5rrwsPd&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1BGD2CUBC4%2F%3Fmibextid%3DwwXIfr"
+                target="_blank"
                 className="flex h-12 w-12 items-center justify-center rounded-full border border-blue-100 bg-white text-blue-600 transition hover:-translate-y-1 hover:shadow-lg"
               >
                 <FaFacebookMessenger size={18} />
               </a>
 
               <a
-                href="#"
+                target="_blank"
+                href="https://wa.me/8801404601580"
                 className="flex h-12 w-12 items-center justify-center rounded-full border border-blue-100 bg-white text-blue-600 transition hover:-translate-y-1 hover:shadow-lg"
               >
                 <FaWhatsapp size={18} />
@@ -101,7 +105,6 @@ export default function Footer() {
               <Link href="/">Home</Link>
               <Link href="/shop">Shop</Link>
               <Link href="/custom-order">Custom Orders</Link>
-              <Link href="/about">About Artist</Link>
             </div>
           </div>
 

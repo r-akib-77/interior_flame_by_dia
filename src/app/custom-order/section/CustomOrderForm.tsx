@@ -16,6 +16,13 @@ export default function CustomOrderForm() {
     vision: "",
   });
 
+  if (
+    form.deadline &&
+    new Date(form.deadline) < new Date(new Date().toDateString())
+  ) {
+    toast.error("Deadline cannot be in the past.");
+    return;
+  }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -49,7 +56,7 @@ Artwork Type:
 ${form.productType || "Not specified"}
 
 Budget:
-${form.budget || "Not specified"}
+৳${form.budget || "Not specified"}
 
 Deadline:
 ${form.deadline || "Not specified"}
@@ -288,10 +295,12 @@ focus:ring-blue-100
 "
             >
               <option value="">Select Product</option>
-              <option>Canvas Painting</option>
-              <option>Embroidery Hoop</option>
-              <option>Tote Bag</option>
-              <option>Hand Painted Jacket</option>
+              <option>Exhibition</option>
+              <option>Painting</option>
+              <option>Wedding Customised Frames</option>
+              <option>Handpaintined Attire</option>
+              <option>Accessories</option>
+              <option>Texture & Collage works</option>
               <option>Other</option>
             </select>
           </div>
@@ -312,7 +321,7 @@ text-slate-500
             </label>
 
             <input
-              type="text"
+              type="number"
               value={form.budget}
               onChange={(e) => setForm({ ...form, budget: e.target.value })}
               className="
@@ -351,24 +360,30 @@ text-slate-500
 
             <input
               type="date"
+              min={new Date().toISOString().split("T")[0]}
               value={form.deadline}
-              onChange={(e) => setForm({ ...form, deadline: e.target.value })}
+              onChange={(e) =>
+                setForm({
+                  ...form,
+                  deadline: e.target.value,
+                })
+              }
               className="
-w-full
-rounded-2xl
-border
-border-slate-200
-bg-white
-px-4
-py-3
-text-slate-700
-outline-none
-transition-all
-duration-300
-focus:border-blue-500
-focus:ring-4
-focus:ring-blue-100
-"
+    w-full
+    rounded-2xl
+    border
+    border-slate-200
+    bg-white
+    px-4
+    py-3
+    text-slate-700
+    outline-none
+    transition-all
+    duration-300
+    focus:border-blue-500
+    focus:ring-4
+    focus:ring-blue-100
+  "
             />
           </div>
         </div>
@@ -422,12 +437,13 @@ focus:ring-blue-100
     w-full
     items-center
     justify-center
-    gap-3
+    gap-2
     overflow-hidden
     rounded-2xl
     bg-[#25D366]
-    px-8
-    py-4
+    px-4
+    py-3.5
+    text-sm
     font-medium
     text-white
     shadow-[0_20px_50px_rgba(37,211,102,0.25)]
@@ -435,13 +451,35 @@ focus:ring-blue-100
     duration-300
     hover:-translate-y-1
     hover:shadow-[0_25px_60px_rgba(37,211,102,0.35)]
+    sm:gap-3
+    sm:px-8
+    sm:py-4
+    sm:text-base
   "
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+          <div
+            className="
+      absolute
+      inset-0
+      translate-x-[-100%]
+      bg-gradient-to-r
+      from-transparent
+      via-white/20
+      to-transparent
+      transition-transform
+      duration-1000
+      group-hover:translate-x-[100%]
+    "
+          />
 
-          <FaWhatsapp size={22} />
+          <FaWhatsapp
+            size={20}
+            className="relative shrink-0 sm:h-[22px] sm:w-[22px]"
+          />
 
-          <span>Submit Order via WhatsApp</span>
+          <span className="relative text-center leading-tight">
+            Submit Order via WhatsApp
+          </span>
         </button>
         <p className="text-center text-sm text-slate-500">
           ✦ Your details will open directly in WhatsApp for quick communication.

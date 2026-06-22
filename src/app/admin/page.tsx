@@ -7,22 +7,30 @@
 //   productCode: string;
 //   price: string;
 //   image: string;
+//   category: string;
+//   stock: string;
 // };
 // {
-//     id: 8,
-//     name: "Custom Jacket Painting",
-//     desc: "Hand painted wearable art.bla bla ....",
-//     productCode: "IFD-004",
-//     category: "Hand Painted",
-//     price: "5,500",
-//     image: "/products/product-4.jpg",
-//   },
+//   name: "Custom Jacket Painting",
+//   desc: "Hand painted wearable art.",
+//   productCode: "IFD-004",
+//   category: "Handpainted Attire",
+//   stock: "In Stock",
+//   price: "5500",
+//   images: [
+//     "/products/product-4-1.jpg",
+//     "/products/product-4-2.jpg",
+//     "/products/product-4-3.jpg",
+//     "/products/product-4-4.jpg"
+//   ]
+// }
 
 "use client";
 
 import { useEffect, useState } from "react";
 import { Upload, Package } from "lucide-react";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function AdminProductsPage() {
   const [form, setForm] = useState({
@@ -30,38 +38,37 @@ export default function AdminProductsPage() {
     desc: "",
     category: "",
     price: "",
+    stock: "In Stock",
   });
 
-  const [imagePreview, setImagePreview] = useState("");
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const [productCode, setProductCode] = useState("");
-  const [categoryName, setCategoryName] = useState("");
 
   useEffect(() => {
     setProductCode("IFD-" + crypto.randomUUID().slice(0, 8).toUpperCase());
   }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const files = Array.from(e.target.files || []);
 
-    if (!file) return;
+    if (!files.length) return;
 
-    const url = URL.createObjectURL(file);
+    const urls = files.slice(0, 4).map((file) => URL.createObjectURL(file));
 
-    setImagePreview(url);
+    setImagePreviews(urls);
   };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const payload = {
       ...form,
-      productCode: productCode,
+      productCode,
+      images: imagePreviews,
     };
-
     console.log(payload);
 
-    alert("Product Ready To Save");
+    toast.success("Product Ready To Save");
   };
 
   return (
@@ -87,18 +94,34 @@ export default function AdminProductsPage() {
             </div>
 
             <div className="mt-6">
-              <div className="aspect-square overflow-hidden rounded-[24px] border border-slate-100 bg-slate-50">
-                {imagePreview ? (
-                  <Image
-                    src={imagePreview}
-                    alt="Preview"
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center text-slate-400">
-                    No Image
+              <div className="grid grid-cols-2 gap-3">
+                {[0, 1, 2, 3].map((index) => (
+                  <div
+                    key={index}
+                    className="
+        aspect-square
+        overflow-hidden
+        rounded-2xl
+        border
+        border-slate-100
+        bg-slate-50
+      "
+                  >
+                    {imagePreviews[index] ? (
+                      <Image
+                        src={imagePreviews[index]}
+                        alt={`Preview ${index + 1}`}
+                        width={400}
+                        height={400}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-xs text-slate-400">
+                        Image {index + 1}
+                      </div>
+                    )}
                   </div>
-                )}
+                ))}
               </div>
 
               <div className="mt-5">
@@ -203,6 +226,31 @@ export default function AdminProductsPage() {
                 </select>
               </div>
 
+              {/* stock  */}
+              <div>
+                <label className="mb-2 block text-sm font-medium text-slate-700">
+                  Stock Status
+                </label>
+
+                <select
+                  value={form.stock}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      stock: e.target.value,
+                    })
+                  }
+                  className="w-full rounded-2xl border border-slate-200 px-4 py-3 outline-none focus:border-blue-500"
+                >
+                  <option value="">Select Status</option>
+
+                  <option value="In Stock">In Stock</option>
+                  <option value="Made To Order">Made To Order</option>
+                  <option value="Custom Order Only">Custom Order Only</option>
+                  <option value="Sold Out">Sold Out</option>
+                </select>
+              </div>
+
               {/* Price */}
               <div>
                 <label className="mb-2 block text-sm font-medium text-slate-700">
@@ -232,11 +280,12 @@ export default function AdminProductsPage() {
                 <label className="flex cursor-pointer items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-blue-200 bg-blue-50 p-8 text-blue-700 transition hover:bg-blue-100">
                   <Upload size={22} />
 
-                  <span>Upload Image</span>
+                  <span>Upload Up To 4 Images</span>
 
                   <input
                     type="file"
                     accept="image/*"
+                    multiple
                     onChange={handleImageUpload}
                     className="hidden"
                   />

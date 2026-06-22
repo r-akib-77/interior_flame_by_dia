@@ -10,7 +10,7 @@ const playfair = Playfair_Display({
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#F8F8FF] via-[#FBFCFF] to-[#F5F9FF] px-4 py-12 md:py-24">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#F8F8FF] via-[#FBFCFF] to-[#F5F9FF] px-4 py-2 md:py-24">
       {/* =========================
       DECORATIVE FLOWERS
 ========================= */}

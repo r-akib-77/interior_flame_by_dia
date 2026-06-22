@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { products } from "../data/data";
 import { FaWhatsapp } from "react-icons/fa";
+import ProductGallery from "./ProductGallery";
 
 export default function ProductPage({
   params,
@@ -18,7 +19,7 @@ export default function ProductPage({
   }
 
   return (
-    <section className="relative overflow-hidden bg-[#F8F8FF] px-4 py-24">
+    <section className="relative overflow-hidden bg-[#F8F8FF] px-4 py-10">
       {/* ================= Elegant Decorative Elements ================= */}
 
       {/* Soft Glow Top Left */}
@@ -120,32 +121,67 @@ export default function ProductPage({
 
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* Breadcrumb */}
-        <div className="mb-10">
+        <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          {/* Breadcrumb */}
+          <nav className="flex items-center gap-2 text-sm">
+            <Link
+              href="/"
+              className="text-slate-500 transition-colors hover:text-blue-600"
+            >
+              Home
+            </Link>
+
+            <span className="text-slate-300">/</span>
+
+            <Link
+              href="/shop"
+              className="text-slate-500 transition-colors hover:text-blue-600"
+            >
+              Shop
+            </Link>
+
+            <span className="text-slate-300">/</span>
+
+            <span className="font-medium text-slate-900">
+              {product.productCode}
+            </span>
+          </nav>
+
+          {/* Back Button */}
           <Link
             href="/shop"
-            className="text-sm font-medium text-blue-600 hover:text-blue-700"
+            className="
+      inline-flex
+      items-center
+      gap-2
+      rounded-full
+      border
+      border-blue-100
+      bg-gradient-to-r
+      from-blue-50
+      to-white
+      px-4
+      py-2
+      text-sm
+      font-medium
+      text-blue-700
+      shadow-sm
+      transition-all
+      duration-300
+      hover:-translate-y-0.5
+      hover:shadow-md
+    "
           >
             ← Back to Shop
           </Link>
         </div>
-
         <div className="grid gap-14 lg:grid-cols-2">
           {/* IMAGE */}
-          <div>
-            <div className="relative overflow-hidden rounded-[36px] border border-blue-100 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
-              <Image
-                src={product.image}
-                alt={product.name}
-                width={900}
-                height={900}
-                className="w-full object-cover"
-              />
-
-              <div className="absolute left-5 top-5 rounded-full bg-white/95 px-4 py-2 text-sm font-medium text-blue-700 shadow-lg">
-                {product.productCode}
-              </div>
-            </div>
-          </div>
+          <ProductGallery
+            images={product.images}
+            productCode={product.productCode}
+            productName={product.name}
+          />
 
           {/* CONTENT */}
           <div>
@@ -200,10 +236,10 @@ export default function ProductPage({
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex flex-col gap-1 border-b border-slate-100 pb-3 sm:flex-row sm:items-center sm:justify-between">
                   <span className="text-slate-500">Category</span>
 
-                  <span className="font-medium text-slate-900">
+                  <span className="text-sm font-medium text-slate-900 sm:text-right">
                     {product.category}
                   </span>
                 </div>
@@ -211,7 +247,19 @@ export default function ProductPage({
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500">Availability</span>
 
-                  <span className="font-medium text-green-600">In Stock</span>
+                  <div
+                    className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${
+                      product.stock === "In Stock"
+                        ? "bg-green-100 text-green-700"
+                        : product.stock === "Made To Order"
+                          ? "bg-blue-100 text-blue-700"
+                          : product.stock === "Custom Order Only"
+                            ? "bg-purple-100 text-purple-700"
+                            : "bg-red-100 text-red-700"
+                    }`}
+                  >
+                    {product.stock}
+                  </div>
                 </div>
               </div>
             </div>
