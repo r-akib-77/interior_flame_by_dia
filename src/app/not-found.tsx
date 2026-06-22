@@ -1,224 +1,120 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import Image from "next/image";
+import { ArrowLeft, Sparkles } from "lucide-react";
+import { Playfair_Display } from "next/font/google";
 
-import { ArrowRight, Sparkles, Star } from "lucide-react";
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["700", "800"],
+});
 
 export default function NotFound() {
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden pt-36 md:pt-24 bg-[#040404] px-4 py-16 text-white sm:px-6">
-      {/* ================= ULTRA LUXURY BACKGROUND ================= */}
-
-      {/* BASE */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,#5c3b11_0%,transparent_26%),radial-gradient(circle_at_bottom_right,#2d1408_0%,transparent_28%),radial-gradient(circle_at_center,#101010_0%,#040404_100%)]" />
-
-      {/* GOLD LIGHT */}
-      <div className="absolute left-[-120px] top-[-120px] h-[420px] w-[420px] rounded-full bg-yellow-500/10 blur-[140px] sm:h-[620px] sm:w-[620px]" />
-
-      {/* ORANGE LIGHT */}
-      <div className="absolute bottom-[-180px] right-[-120px] h-[420px] w-[420px] rounded-full bg-orange-500/10 blur-[150px] sm:h-[650px] sm:w-[650px]" />
-
-      {/* CENTER LIGHT */}
-      <div className="absolute left-1/2 top-[35%] h-[240px] w-[240px] -translate-x-1/2 rounded-full bg-white/[0.03] blur-[120px]" />
-
-      {/* GRID */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:80px_80px]" />
-
-      {/* NOISE */}
-      <div className="absolute inset-0 opacity-[0.03] mix-blend-soft-light [background-image:url('https://grainy-gradients.vercel.app/noise.svg')]" />
-
-      {/* ================= FLOATING PARTICLES ================= */}
-
-      <motion.div
-        animate={{
-          y: [0, -25, 0],
-          opacity: [0.4, 1, 0.4],
-        }}
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-        }}
-        className="absolute left-[12%] top-[18%]"
-      >
-        <Star className="h-4 w-4 text-yellow-400/80" />
-      </motion.div>
-
-      <motion.div
-        animate={{
-          y: [0, 18, 0],
-          opacity: [0.3, 1, 0.3],
-        }}
-        transition={{
-          duration: 6,
-          repeat: Infinity,
-        }}
-        className="absolute right-[15%] top-[22%]"
-      >
-        <Star className="h-3 w-3 text-white/70" />
-      </motion.div>
-
-      <motion.div
-        animate={{
-          y: [0, -18, 0],
-          opacity: [0.3, 1, 0.3],
-        }}
-        transition={{
-          duration: 7,
-          repeat: Infinity,
-        }}
-        className="absolute bottom-[18%] left-[20%]"
-      >
-        <Star className="h-3 w-3 text-yellow-400/70" />
-      </motion.div>
-
-      {/* ================= MAIN CONTENT ================= */}
-
-      <div className="relative z-10 mx-auto w-full max-w-3xl text-center">
-        {/* TOP LABEL */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.6,
-          }}
-          className="mb-8 inline-flex items-center gap-3 rounded-full border border-yellow-500/10 bg-yellow-500/[0.05] px-5 py-2 backdrop-blur-xl"
-        >
-          <div className="h-2 w-2 rounded-full bg-yellow-400 shadow-[0_0_14px_rgba(255,215,0,0.9)]" />
-
-          <p className="text-[9px] uppercase tracking-[0.45em] text-yellow-400 sm:text-[10px]">
-            Lost In The Gallery
-          </p>
-        </motion.div>
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F8F8FF] px-4">
+      {/* Decorative Flowers */}{" "}
+      <div className="absolute -left-16 -top-10 opacity-60">
+        {" "}
+        <Image src="/decor/flower-1.png" alt="" width={220} height={220} />{" "}
+      </div>
+      ```
+      <div className="absolute -right-12 top-16 opacity-50">
+        <Image src="/decor/flower-2.png" alt="" width={180} height={180} />
+      </div>
+      <div className="absolute bottom-10 left-10 opacity-30">
+        <Image src="/decor/flower-small.png" alt="" width={70} height={70} />
+      </div>
+      <div className="absolute bottom-16 right-10 opacity-30">
+        <Image src="/decor/flower-small.png" alt="" width={90} height={90} />
+      </div>
+      {/* Main Content */}
+      <div className="relative z-10 mx-auto max-w-3xl text-center">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-5 py-2 text-sm text-blue-700 shadow-sm">
+          <Sparkles size={16} />
+          Lost In The Gallery
+        </div>
 
         {/* 404 */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            scale: 0.85,
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-          }}
-          transition={{
-            duration: 0.9,
-          }}
-          className="relative"
+        <h1
+          className={`${playfair.className} mt-8 text-[7rem] font-black leading-none tracking-[-0.08em] text-blue-700 md:text-[10rem]`}
         >
-          {/* GIANT GLOW */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-[220px] w-[220px] rounded-full bg-yellow-500/10 blur-[120px]" />
-          </div>
+          404
+        </h1>
 
-          <h1 className="relative font-serif text-[110px] font-semibold leading-none tracking-[-0.05em] text-white sm:text-[220px]">
-            {/* STROKE */}
-            <span className="absolute inset-0 bg-gradient-to-b from-yellow-400/20 to-transparent bg-clip-text text-transparent blur-2xl">
-              404
-            </span>
-            404
-          </h1>
-        </motion.div>
-
-        {/* TITLE */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            delay: 0.2,
-            duration: 0.7,
-          }}
+        {/* Heading */}
+        <h2
+          className={`${playfair.className} text-4xl font-bold text-slate-900 md:text-6xl`}
         >
-          <h2 className="font-serif text-3xl leading-tight text-white sm:text-6xl">
-            This Artwork
-            <span className="mt-2 block italic text-yellow-400">
-              Never Existed
-            </span>
-          </h2>
-        </motion.div>
+          Artwork Not Found
+        </h2>
 
-        {/* DESCRIPTION */}
-        <motion.p
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            delay: 0.35,
-            duration: 0.7,
-          }}
-          className="mx-auto mt-7 max-w-2xl text-sm leading-8 text-zinc-400 sm:text-lg"
-        >
-          The page you are looking for may have been removed, relocated, or
-          perhaps never painted into existence. Return to the curated collection
-          and continue exploring handcrafted luxury artistry.
-        </motion.p>
+        {/* Description */}
+        <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
+          It seems this piece has wandered away from the gallery. Let’s guide
+          you back to a collection filled with handcrafted beauty, artistic
+          warmth, and timeless creations.
+        </p>
 
-        {/* DIVIDER */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            scaleX: 0,
-          }}
-          animate={{
-            opacity: 1,
-            scaleX: 1,
-          }}
-          transition={{
-            delay: 0.5,
-            duration: 0.8,
-          }}
-          className="mx-auto mt-10 h-px w-40 bg-gradient-to-r from-transparent via-yellow-400/60 to-transparent"
-        />
+        {/* Decorative Divider */}
+        <div className="mt-8 flex items-center justify-center gap-3">
+          <div className="h-px w-12 bg-blue-300" />
+          <span className="text-blue-400">❀</span>
+          <div className="h-px w-12 bg-blue-300" />
+        </div>
 
-        {/* BUTTON */}
-        <motion.div
-          initial={{
-            opacity: 0,
-            y: 20,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            delay: 0.6,
-            duration: 0.7,
-          }}
-          className="mt-10 flex justify-center"
-        >
+        {/* Buttons */}
+        <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row">
           <Link
             href="/"
-            className="group relative inline-flex items-center gap-4 overflow-hidden rounded-full border border-yellow-500/20 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 px-7 py-4 text-[11px] tracking-[0.28em] text-yellow-400 shadow-[0_0_60px_rgba(255,215,0,0.08)] backdrop-blur-2xl transition duration-500 hover:border-yellow-500/40 hover:scale-[1.02]"
+            className="
+          inline-flex
+          items-center
+          justify-center
+          gap-2
+          rounded-2xl
+          bg-blue-600
+          px-8
+          py-4
+          font-medium
+          text-white
+          shadow-lg
+          transition
+          hover:-translate-y-1
+          hover:bg-blue-700
+        "
           >
-            {/* BUTTON GLOW */}
-            <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100">
-              <div className="absolute left-1/2 top-0 h-20 w-20 -translate-x-1/2 rounded-full bg-yellow-400/20 blur-3xl" />
-            </div>
-
-            <Sparkles className="relative z-10 h-4 w-4" />
-
-            <span className="relative z-10">RETURN HOME</span>
-
-            <ArrowRight className="relative z-10 h-4 w-4 transition duration-300 group-hover:translate-x-1" />
+            <ArrowLeft size={18} />
+            Return Home
           </Link>
-        </motion.div>
+
+          <Link
+            href="/shop"
+            className="
+          rounded-2xl
+          border
+          border-blue-100
+          bg-white
+          px-8
+          py-4
+          font-medium
+          text-slate-800
+          shadow-sm
+          transition
+          hover:-translate-y-1
+        "
+          >
+            Explore Collection
+          </Link>
+        </div>
+
+        {/* Signature */}
+        <div className="mt-14">
+          <p className="text-sm uppercase tracking-[0.35em] text-slate-400">
+            Interior Flame By Dia
+          </p>
+        </div>
       </div>
     </main>
   );
