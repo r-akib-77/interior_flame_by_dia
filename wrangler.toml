@@ -3,7 +3,9 @@ pages_build_output_dir = ".vercel/output/static"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 
-[[d1_databases]]
-binding = "DB"
-database_name = "interior_flame_db"
-database_id = "your-d1-database-id-here"
+# D1 Database binding is set in Cloudflare Pages Dashboard Settings -> Functions -> D1 Database Bindings (Name: DB)
+# If using wrangler.toml for D1, replace with your real D1 Database UUID from Cloudflare Dashboard:
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "interior_flame_db"
+# database_id = "your-actual-d1-database-id-here"
