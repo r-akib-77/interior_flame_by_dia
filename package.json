@@ -5,11 +5,14 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
+    "pages:build": "next build --turbopack && npx @cloudflare/next-on-pages",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1090.0",
     "framer-motion": "^12.40.0",
+    "jose": "^6.2.8",
     "lucide-react": "^1.21.0",
     "next": "15.5.18",
     "react": "19.1.0",
@@ -19,6 +22,8 @@
     "react-intersection-observer": "^10.0.3"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
+    "@cloudflare/workers-types": "^5.20260719.1",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

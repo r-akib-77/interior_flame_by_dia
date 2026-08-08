@@ -1,18 +1,18 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { products } from "../data/data";
 import { FaWhatsapp } from "react-icons/fa";
 import ProductGallery from "./ProductGallery";
 
-export default function ProductPage({
+export default async function ProductPage({
   params,
 }: {
-  params: {
+  params: Promise<{
     productCode: string;
-  };
+  }>;
 }) {
-  const product = products.find((p) => p.productCode === params.productCode);
+  const { productCode } = await params;
+  const product = products.find((p) => p.productCode === productCode);
 
   if (!product) {
     notFound();

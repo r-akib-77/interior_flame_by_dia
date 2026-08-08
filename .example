@@ -1,0 +1,15 @@
+# Admin Authentication
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=admin123
+JWT_SECRET=interior_flame_super_secret_jwt_key_change_in_production_2026
+
+# Cloudflare D1 Database (Local Dev / Cloudflare Pages Binding)
+# DB binding name in Cloudflare Pages must be "DB"
+# D1_DATABASE_ID=your-d1-database-id-here
+
+# Cloudflare R2 Storage (Media Uploads)
+R2_S3_ENDPOINT=https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+R2_ACCESS_KEY_ID=your_access_key_id
+R2_SECRET_ACCESS_KEY=your_secret_access_key
+R2_BUCKET_NAME=your_bucket_name
+R2_PUBLIC_URL=https://pub-xxxx.r2.dev
