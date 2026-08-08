@@ -5,11 +5,23 @@ export const runtime = "edge";
 
 export async function POST(req: Request) {
   try {
-    const endpoint = process.env.R2_S3_ENDPOINT;
-    const accessKeyId = process.env.R2_ACCESS_KEY_ID;
-    const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
-    const bucketName = process.env.R2_BUCKET_NAME;
-    const publicUrlBase = process.env.R2_PUBLIC_URL;
+    let endpoint = process.env.R2_S3_ENDPOINT || "";
+    const accessKeyId = process.env.R2_ACCESS_KEY_ID || "";
+    const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY || "";
+    let bucketName = process.env.R2_BUCKET_NAME || "";
+    const publicUrlBase = process.env.R2_PUBLIC_URL || "";
+
+    // Automatically clean endpoint if user passes endpoint with bucket path at the end
+    if (endpoint.includes('.r2.cloudflarestorage.com/')) {
+      const parts = endpoint.split('.r2.cloudflarestorage.com');
+      const pathBucket = parts[1].replace(/^\/+|\/+$/g, '');
+      if (pathBucket && !bucketName) {
+        bucketName = pathBucket;
+      }
+      endpoint = parts[0] + '.r2.cloudflarestorage.com';
+    } else {
+      endpoint = endpoint.replace(/\/+$/, '');
+    }
 
     if (!endpoint || !accessKeyId || !secretAccessKey || !bucketName) {
       console.error("Missing R2 S3 credentials in environment variables");
