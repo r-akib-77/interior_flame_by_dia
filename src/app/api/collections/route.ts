@@ -7,6 +7,7 @@ export const runtime = "edge";
 // Cache flag to prevent redundant CREATE TABLE calls within the same worker instance
 let isTableChecked = false;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 async function ensureTableExists(db: any) {
   if (isTableChecked || !db || typeof db.prepare !== 'function') return;
   try {
