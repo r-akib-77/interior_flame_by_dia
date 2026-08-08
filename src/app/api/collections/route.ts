@@ -4,6 +4,33 @@ import { MOCK_PRODUCTS } from '@/mockData';
 
 export const runtime = "edge";
 
+// Cache flag to prevent redundant CREATE TABLE calls within the same worker instance
+let isTableChecked = false;
+
+async function ensureTableExists(db: any) {
+  if (isTableChecked || !db || typeof db.prepare !== 'function') return;
+  try {
+    await db.prepare(`
+      CREATE TABLE IF NOT EXISTS collections (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        price TEXT NOT NULL,
+        description TEXT,
+        image TEXT NOT NULL,
+        images TEXT,
+        style TEXT DEFAULT '[]',
+        fabrics TEXT DEFAULT '[]',
+        type TEXT DEFAULT '',
+        stitchType TEXT DEFAULT '',
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `).run();
+    isTableChecked = true;
+  } catch (err) {
+    console.error("Auto-table initialization notice:", err);
+  }
+}
+
 // Helper to handle SQLite JSON array parsing
 const parseJSON = (str: unknown): string[] => {
   if (Array.isArray(str)) return str as string[];
@@ -48,6 +75,9 @@ export async function GET() {
       return NextResponse.json(MOCK_PRODUCTS);
     }
 
+    // Automatically create the table if it doesn't exist yet
+    await ensureTableExists(db);
+
     const { results } = await db.prepare("SELECT * FROM collections ORDER BY created_at DESC").all();
     
     if (!results || results.length === 0) {
@@ -81,6 +111,9 @@ export async function POST(req: Request) {
         error: "Cloudflare D1 Database binding 'DB' is missing. Please ensure your Cloudflare Pages DB binding is configured in wrangler.toml or Cloudflare dashboard." 
       }, { status: 500 });
     }
+
+    // Automatically create the table if it doesn't exist yet
+    await ensureTableExists(db);
 
     const body = await req.json();
     const id = body.id || Date.now().toString();
@@ -128,6 +161,9 @@ export async function PUT(req: Request) {
     if (!db || typeof db.prepare !== 'function') {
       return NextResponse.json({ error: "Cloudflare D1 Database binding 'DB' is missing." }, { status: 500 });
     }
+
+    // Automatically create the table if it doesn't exist yet
+    await ensureTableExists(db);
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
@@ -177,6 +213,9 @@ export async function DELETE(req: Request) {
     if (!db || typeof db.prepare !== 'function') {
       return NextResponse.json({ error: "Cloudflare D1 Database binding 'DB' is missing." }, { status: 500 });
     }
+
+    // Automatically create the table if it doesn't exist yet
+    await ensureTableExists(db);
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');
