@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS collections (
   description TEXT,
   image TEXT NOT NULL,
   images TEXT,
+  category TEXT DEFAULT '',
   style TEXT DEFAULT '[]',
   fabrics TEXT DEFAULT '[]',
   type TEXT DEFAULT '',

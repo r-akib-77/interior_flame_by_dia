@@ -4,7 +4,6 @@ import { MOCK_PRODUCTS } from '@/mockData';
 
 export const runtime = "edge";
 
-// Cache flag to prevent redundant CREATE TABLE calls within the same worker instance
 let isTableChecked = false;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,6 +18,7 @@ async function ensureTableExists(db: any) {
         description TEXT,
         image TEXT NOT NULL,
         images TEXT,
+        category TEXT DEFAULT '',
         style TEXT DEFAULT '[]',
         fabrics TEXT DEFAULT '[]',
         type TEXT DEFAULT '',
@@ -76,7 +76,6 @@ export async function GET() {
       return NextResponse.json(MOCK_PRODUCTS);
     }
 
-    // Automatically create the table if it doesn't exist yet
     await ensureTableExists(db);
 
     const { results } = await db.prepare("SELECT * FROM collections ORDER BY created_at DESC").all();
@@ -87,6 +86,7 @@ export async function GET() {
 
     const formatted = results.map((item: Record<string, unknown>) => ({
       ...item,
+      category: item.category || item.type || '',
       images: parseJSON(item.images),
       style: parseJSON(item.style),
       fabrics: parseJSON(item.fabrics)
@@ -109,23 +109,23 @@ export async function POST(req: Request) {
     const db = process.env.DB;
     if (!db || typeof db.prepare !== 'function') {
       return NextResponse.json({ 
-        error: "Cloudflare D1 Database binding 'DB' is missing. Please ensure your Cloudflare Pages DB binding is configured in wrangler.toml or Cloudflare dashboard." 
+        error: "Cloudflare D1 Database binding 'DB' is missing." 
       }, { status: 500 });
     }
 
-    // Automatically create the table if it doesn't exist yet
     await ensureTableExists(db);
 
     const body = await req.json();
     const id = body.id || Date.now().toString();
-    const { name, price, description, image, images, style, fabrics, type, stitchType } = body;
+    const { name, price, description, image, images, category, type } = body;
 
     const primaryImage = image || (Array.isArray(images) && images[0]) || '';
     const imagesList = Array.isArray(images) && images.length > 0 ? images : (primaryImage ? [primaryImage] : []);
+    const catValue = category || type || '';
 
     await db.prepare(`
-      INSERT INTO collections (id, name, price, description, image, images, style, fabrics, type, stitchType) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO collections (id, name, price, description, image, images, category, type) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       id,
       name || 'Untitled Collection',
@@ -133,15 +133,14 @@ export async function POST(req: Request) {
       description || '',
       primaryImage,
       JSON.stringify(imagesList),
-      JSON.stringify(Array.isArray(style) ? style : []),
-      JSON.stringify(Array.isArray(fabrics) ? fabrics : []),
-      type || '',
-      stitchType || ''
+      catValue,
+      catValue
     ).run();
 
     return NextResponse.json({ 
       ...body, 
       id, 
+      category: catValue,
       image: primaryImage, 
       images: imagesList 
     }, { status: 201 });
@@ -163,7 +162,6 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Cloudflare D1 Database binding 'DB' is missing." }, { status: 500 });
     }
 
-    // Automatically create the table if it doesn't exist yet
     await ensureTableExists(db);
 
     const { searchParams } = new URL(req.url);
@@ -173,15 +171,15 @@ export async function PUT(req: Request) {
     }
 
     const body = await req.json();
-    const { name, price, description, image, images, style, fabrics, type, stitchType } = body;
+    const { name, price, description, image, images, category, type } = body;
     
     const primaryImage = image || (Array.isArray(images) && images[0]) || '';
     const imagesList = Array.isArray(images) && images.length > 0 ? images : (primaryImage ? [primaryImage] : []);
+    const catValue = category || type || '';
 
     await db.prepare(`
       UPDATE collections SET 
-        name = ?, price = ?, description = ?, image = ?, images = ?, 
-        style = ?, fabrics = ?, type = ?, stitchType = ?
+        name = ?, price = ?, description = ?, image = ?, images = ?, category = ?, type = ?
       WHERE id = ?
     `).bind(
       name || '',
@@ -189,14 +187,12 @@ export async function PUT(req: Request) {
       description || '',
       primaryImage,
       JSON.stringify(imagesList),
-      JSON.stringify(Array.isArray(style) ? style : []),
-      JSON.stringify(Array.isArray(fabrics) ? fabrics : []),
-      type || '',
-      stitchType || '',
+      catValue,
+      catValue,
       id
     ).run();
 
-    return NextResponse.json({ ...body, id, image: primaryImage, images: imagesList });
+    return NextResponse.json({ ...body, id, category: catValue, image: primaryImage, images: imagesList });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
     console.error("D1 Database Update Error:", error);
@@ -215,7 +211,6 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Cloudflare D1 Database binding 'DB' is missing." }, { status: 500 });
     }
 
-    // Automatically create the table if it doesn't exist yet
     await ensureTableExists(db);
 
     const { searchParams } = new URL(req.url);

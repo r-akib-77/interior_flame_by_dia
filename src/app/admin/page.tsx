@@ -5,7 +5,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Trash2, Plus, LogOut, Loader2, CheckCircle2, Edit3, XCircle, 
-  Upload, Image as ImageIcon, Sparkles, Layers, ShieldCheck, Database, HardDrive, AlertCircle, RefreshCw
+  Upload, Image as ImageIcon, Sparkles, Layers, ShieldCheck, Database, HardDrive, AlertCircle, RefreshCw, FolderPlus, Tag
 } from 'lucide-react';
 import { MOCK_PRODUCTS } from '@/mockData';
 
@@ -16,12 +16,19 @@ export interface CollectionItem {
   description?: string;
   image: string;
   images?: string[];
-  style?: string[];
-  fabrics?: string[];
-  type?: string;
-  stitchType?: string;
+  category?: string;
   created_at?: string;
 }
+
+const DEFAULT_CATEGORIES = [
+  'Exhibition',
+  'Painting',
+  'Wedding Customised Frames',
+  'Handpainted Attire',
+  'Accessories',
+  'Texture & Collage Works',
+  'Other'
+];
 
 // Safe price formatter
 const formatPrice = (price: unknown): string => {
@@ -35,6 +42,10 @@ export default function AdminProductsPage() {
   const [username, setUsername] = useState('admin');
   const [password, setPassword] = useState('');
   const [collections, setCollections] = useState<CollectionItem[]>([]);
+  const [categories, setCategories] = useState<string[]>(DEFAULT_CATEGORIES);
+  const [newCatName, setNewCatName] = useState('');
+  const [showCatModal, setShowCatModal] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [authChecking, setAuthChecking] = useState(true);
   const [error, setError] = useState('');
@@ -47,10 +58,7 @@ export default function AdminProductsPage() {
     description: '',
     image: '',
     images: [] as string[],
-    style: [] as string[],
-    fabrics: [] as string[],
-    type: '',
-    stitchType: ''
+    category: ''
   };
 
   const [newItem, setNewItem] = useState({ ...emptyItem });
@@ -61,6 +69,45 @@ export default function AdminProductsPage() {
     setStatusMessage({ text, type });
     setTimeout(() => setStatusMessage(null), 5000);
   }, []);
+
+  // Load saved categories from localStorage
+  useEffect(() => {
+    try {
+      const savedCats = localStorage.getItem('admin_artwork_categories');
+      if (savedCats) {
+        const parsed = JSON.parse(savedCats);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setCategories(parsed);
+        }
+      }
+    } catch {}
+  }, []);
+
+  // Category Management Handlers
+  const handleAddCategory = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = newCatName.trim();
+    if (!trimmed) return;
+    if (categories.some(c => c.toLowerCase() === trimmed.toLowerCase())) {
+      return showToast('Category already exists!', 'error');
+    }
+    const updated = [...categories, trimmed];
+    setCategories(updated);
+    localStorage.setItem('admin_artwork_categories', JSON.stringify(updated));
+    setNewCatName('');
+    showToast(`Added new category: "${trimmed}"`, 'success');
+  };
+
+  const handleDeleteCategory = (catToDelete: string) => {
+    if (!confirm(`Delete category "${catToDelete}"?`)) return;
+    const updated = categories.filter(c => c !== catToDelete);
+    setCategories(updated);
+    localStorage.setItem('admin_artwork_categories', JSON.stringify(updated));
+    if (newItem.category === catToDelete) {
+      setNewItem(prev => ({ ...prev, category: '' }));
+    }
+    showToast(`Category "${catToDelete}" deleted`, 'info');
+  };
 
   /* ─── API helpers ─── */
   const fetchCollections = useCallback(async () => {
@@ -264,10 +311,7 @@ export default function AdminProductsPage() {
       description: item.description || '',
       image: item.image || (gallery[0] || ''),
       images: gallery,
-      style: Array.isArray(item.style) ? item.style : [],
-      fabrics: Array.isArray(item.fabrics) ? item.fabrics : [],
-      type: item.type || '',
-      stitchType: item.stitchType || ''
+      category: item.category || ''
     });
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -303,7 +347,6 @@ export default function AdminProductsPage() {
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-zinc-950 px-4 relative overflow-hidden">
-        {/* Ambient background glow */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
 
         <motion.div
@@ -419,6 +462,12 @@ export default function AdminProductsPage() {
 
           <div className="flex items-center gap-3">
             <button
+              onClick={() => setShowCatModal(!showCatModal)}
+              className="px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-amber-300 text-xs font-semibold uppercase tracking-wider transition-colors flex items-center gap-2"
+            >
+              <FolderPlus size={15} /> Manage Categories ({categories.length})
+            </button>
+            <button
               onClick={fetchCollections}
               disabled={loading}
               className="p-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors"
@@ -442,6 +491,68 @@ export default function AdminProductsPage() {
             </button>
           </div>
         </div>
+
+        {/* ── Category Manager Drawer / Modal ── */}
+        <AnimatePresence>
+          {showCatModal && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="bg-zinc-900 border border-amber-500/30 p-6 rounded-2xl space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-amber-400">
+                  <Tag size={18} />
+                  <h3 className="font-serif font-bold text-lg text-white">Artwork Categories Manager</h3>
+                </div>
+                <button
+                  onClick={() => setShowCatModal(false)}
+                  className="text-zinc-400 hover:text-white text-xs uppercase font-bold"
+                >
+                  Close
+                </button>
+              </div>
+
+              {/* Add New Category Form */}
+              <form onSubmit={handleAddCategory} className="flex gap-3">
+                <input
+                  type="text"
+                  placeholder="Create new category (e.g. Calligraphy, Sculptures...)"
+                  className="flex-1 px-4 py-2 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-amber-500"
+                  value={newCatName}
+                  onChange={e => setNewCatName(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-amber-500 text-zinc-950 font-bold rounded-xl text-xs uppercase tracking-wider hover:bg-amber-400 transition-colors flex items-center gap-1.5"
+                >
+                  <Plus size={16} /> Add Category
+                </button>
+              </form>
+
+              {/* Existing Categories List */}
+              <div className="flex flex-wrap gap-2 pt-2">
+                {categories.map(cat => (
+                  <div
+                    key={cat}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-zinc-950 border border-zinc-800 rounded-xl text-xs text-zinc-200"
+                  >
+                    <span>{cat}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteCategory(cat)}
+                      className="text-zinc-500 hover:text-red-400 transition-colors ml-1"
+                      title="Delete category"
+                    >
+                      <Trash2 size={13} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Dashboard Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -472,7 +583,7 @@ export default function AdminProductsPage() {
                     Product Title *
                   </label>
                   <input
-                    placeholder="e.g. Royal Silk Velvet Kamiz"
+                    placeholder="e.g. Vintage Framed Calligraphy"
                     className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-amber-500 transition-colors"
                     value={newItem.name}
                     onChange={e => setNewItem({ ...newItem, name: e.target.value })}
@@ -495,6 +606,33 @@ export default function AdminProductsPage() {
                       required
                     />
                   </div>
+                </div>
+
+                {/* Artwork Category Dropdown */}
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-[11px] uppercase tracking-widest text-zinc-400 font-semibold">
+                      Artwork Category *
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowCatModal(true)}
+                      className="text-[10px] text-amber-400 hover:underline uppercase font-bold"
+                    >
+                      + Manage / Add
+                    </button>
+                  </div>
+                  <select
+                    className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-sm text-zinc-200 focus:outline-none focus:border-amber-500 transition-colors"
+                    value={newItem.category}
+                    onChange={e => setNewItem({ ...newItem, category: e.target.value })}
+                    required
+                  >
+                    <option value="">Select Category</option>
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
                 </div>
 
                 {/* Multiple Image Upload & Gallery */}
@@ -587,115 +725,21 @@ export default function AdminProductsPage() {
                     Description
                   </label>
                   <textarea
-                    placeholder="Product details, care instructions, or aesthetic notes..."
-                    className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-amber-500 transition-colors h-24"
+                    placeholder="Product details, materials used, care instructions, or aesthetic notes..."
+                    className="w-full px-4 py-2.5 bg-zinc-950 border border-zinc-800 rounded-xl text-white placeholder-zinc-600 text-sm focus:outline-none focus:border-amber-500 transition-colors h-28"
                     value={newItem.description}
                     onChange={e => setNewItem({ ...newItem, description: e.target.value })}
                   />
                 </div>
 
-                {/* Category Options */}
-                <div className="space-y-3 pt-3 border-t border-zinc-800">
-                  <div className="grid grid-cols-2 gap-4">
-                    
-                    {/* Style Checkboxes */}
-                    <div>
-                      <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-2">
-                        Style Tag
-                      </label>
-                      <div className="space-y-1.5">
-                        {['Original Pakistani', 'Inspired Pakistani'].map(s => (
-                          <label key={s} className="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer select-none">
-                            <input
-                              type="checkbox"
-                              checked={newItem.style.includes(s)}
-                              onChange={() => {
-                                const next = newItem.style.includes(s)
-                                  ? newItem.style.filter(v => v !== s)
-                                  : [...newItem.style, s];
-                                setNewItem({ ...newItem, style: next });
-                              }}
-                              className="accent-amber-500 rounded"
-                            />
-                            <span>{s}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Fabric Checkboxes */}
-                    <div>
-                      <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-2">
-                        Fabric
-                      </label>
-                      <div className="space-y-1.5">
-                        {['Organza', 'Chiffon', 'Cotton', 'Silk', 'Velvet'].map(f => (
-                          <label key={f} className="flex items-center gap-2 text-xs text-zinc-300 cursor-pointer select-none">
-                            <input
-                              type="checkbox"
-                              checked={newItem.fabrics.includes(f)}
-                              onChange={() => {
-                                const next = newItem.fabrics.includes(f)
-                                  ? newItem.fabrics.filter(v => v !== f)
-                                  : [...newItem.fabrics, f];
-                                setNewItem({ ...newItem, fabrics: next });
-                              }}
-                              className="accent-amber-500 rounded"
-                            />
-                            <span>{f}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 pt-2">
-                    {/* Type Select */}
-                    <div>
-                      <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-1">
-                        Category Type
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 focus:outline-none focus:border-amber-500"
-                        value={newItem.type}
-                        onChange={e => setNewItem({ ...newItem, type: e.target.value })}
-                      >
-                        <option value="">Select Type</option>
-                        <option value="Gown">Gown</option>
-                        <option value="Kamiz">Kamiz</option>
-                        <option value="Saree">Saree</option>
-                        <option value="Lehenga">Lehenga</option>
-                      </select>
-                    </div>
-
-                    {/* Stitch Type Select */}
-                    <div>
-                      <label className="block text-[10px] uppercase tracking-widest text-zinc-400 font-bold mb-1">
-                        Stitch Option
-                      </label>
-                      <select
-                        className="w-full px-3 py-2 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-200 focus:outline-none focus:border-amber-500"
-                        value={newItem.stitchType}
-                        onChange={e => setNewItem({ ...newItem, stitchType: e.target.value })}
-                      >
-                        <option value="">Select Stitch</option>
-                        <option value="Ready Made">Ready Made</option>
-                        <option value="Unstitched">Unstitched</option>
-                        <option value="Custom Fit">Custom Fit</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Form Submit Button */}
                 <button
                   type="submit"
-                  disabled={loading || uploading || !newItem.name || (newItem.images.length === 0 && !newItem.image)}
+                  disabled={loading || uploading || !newItem.name || !newItem.category || (newItem.images.length === 0 && !newItem.image)}
                   className="w-full bg-amber-500 text-zinc-950 font-bold py-3.5 rounded-xl hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-sm uppercase tracking-wider mt-4"
                 >
                   {editingId ? <Edit3 size={18} /> : <Plus size={18} />}
-                  {loading ? 'Saving to D1...' : (editingId ? 'Update Product' : 'Add Product to D1 Database')}
+                  {loading ? 'Saving to D1...' : (editingId ? 'Update Artwork' : 'Add Artwork to D1 Database')}
                 </button>
 
               </form>
@@ -726,7 +770,7 @@ export default function AdminProductsPage() {
                       <tr>
                         <th className="px-5 py-3.5 font-bold">Product</th>
                         <th className="px-5 py-3.5 font-bold">Price</th>
-                        <th className="px-5 py-3.5 font-bold">Details</th>
+                        <th className="px-5 py-3.5 font-bold">Category</th>
                         <th className="px-5 py-3.5 font-bold text-right">Actions</th>
                       </tr>
                     </thead>
@@ -760,23 +804,13 @@ export default function AdminProductsPage() {
                             {formatPrice(item.price)}
                           </td>
                           <td className="px-5 py-4">
-                            <div className="flex flex-wrap gap-1">
-                              {item.type && (
-                                <span className="px-2 py-0.5 bg-zinc-800 text-zinc-300 text-[10px] rounded font-medium">
-                                  {item.type}
-                                </span>
-                              )}
-                              {item.stitchType && (
-                                <span className="px-2 py-0.5 bg-amber-500/10 text-amber-300 border border-amber-500/20 text-[10px] rounded font-medium">
-                                  {item.stitchType}
-                                </span>
-                              )}
-                              {Array.isArray(item.fabrics) && item.fabrics.map((f: string) => (
-                                <span key={f} className="px-2 py-0.5 bg-zinc-950 text-zinc-400 text-[10px] rounded border border-zinc-800">
-                                  {f}
-                                </span>
-                              ))}
-                            </div>
+                            {item.category ? (
+                              <span className="px-2.5 py-1 bg-amber-500/10 text-amber-300 border border-amber-500/20 text-[10px] rounded-md font-medium uppercase tracking-wider">
+                                {item.category}
+                              </span>
+                            ) : (
+                              <span className="text-zinc-600 text-xs">—</span>
+                            )}
                           </td>
                           <td className="px-5 py-4 text-right">
                             <div className="flex items-center justify-end gap-2">
