@@ -4,6 +4,8 @@ import { products } from "../data/data";
 import { FaWhatsapp } from "react-icons/fa";
 import ProductGallery from "./ProductGallery";
 
+export const runtime = "edge";
+
 export default async function ProductPage({
   params,
 }: {
